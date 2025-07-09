@@ -15,6 +15,11 @@ import {
   type ProcessVoiceQueryInput,
   type ProcessVoiceQueryOutput,
 } from '@/ai/flows/process-voice-query'
+import {
+  processDocumentQuery,
+  type ProcessDocumentQueryInput,
+  type ProcessDocumentQueryOutput,
+} from '@/ai/flows/process-document-query'
 
 export async function getTextResponse(
   input: ProcessTextQueryInput
@@ -52,5 +57,17 @@ export async function getVoiceResponse(
       textResponse: 'Sorry, I had trouble understanding you. Please try again.',
       audioResponse: ''
     }
+  }
+}
+
+export async function getDocumentResponse(
+  input: ProcessDocumentQueryInput
+): Promise<ProcessDocumentQueryOutput> {
+  try {
+    const response = await processDocumentQuery(input);
+    return response;
+  } catch (error) {
+    console.error('Error processing document query:', error);
+    return { answer: 'Sorry, I encountered an error analyzing the document. Please try again.' };
   }
 }

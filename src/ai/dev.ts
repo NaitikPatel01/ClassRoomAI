@@ -4,3 +4,4 @@ config();
 import '@/ai/flows/process-text-query.ts';
 import '@/ai/flows/process-image-query.ts';
 import '@/ai/flows/process-voice-query.ts';
+import '@/ai/flows/process-document-query.ts';

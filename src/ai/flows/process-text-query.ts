@@ -13,7 +13,7 @@ import {z} from 'genkit';
 
 const ProcessTextQueryInputSchema = z.object({
   query: z.string().describe('The text-based question from the student.'),
-  chatHistory: z.string().optional().describe('Previous chat history for context.'),
+  chatHistory: z.string().describe('The history of the conversation.'),
 });
 export type ProcessTextQueryInput = z.infer<typeof ProcessTextQueryInputSchema>;
 
@@ -34,9 +34,8 @@ const prompt = ai.definePrompt({
 
 Question: {{{query}}}
 
-{{#if chatHistory}}
-Chat History: {{{chatHistory}}}
-{{/if}}
+Chat History:
+{{{chatHistory}}}
 `,
 });
 

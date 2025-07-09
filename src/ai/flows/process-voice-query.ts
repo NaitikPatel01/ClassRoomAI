@@ -18,7 +18,7 @@ const ProcessVoiceQueryInputSchema = z.object({
     .describe(
       'The audio data URI containing the voice query.  Must include a MIME type and use Base64 encoding. Expected format: data:<mimetype>;base64,<encoded_data>.'
     ),
-  previousContext: z.string().optional().describe('Previous conversation context.'),
+  chatHistory: z.string().describe('The history of the conversation.'),
 });
 export type ProcessVoiceQueryInput = z.infer<typeof ProcessVoiceQueryInputSchema>;
 
@@ -38,7 +38,7 @@ const voiceQueryPrompt = ai.definePrompt({
   output: {schema: ProcessVoiceQueryOutputSchema},
   prompt: `You are a helpful AI assistant for students.  Answer the question based on the audio provided. Use previous context for memory.
 
-Previous Context: {{{previousContext}}}
+Chat History: {{{chatHistory}}}
 
 Audio: {{media url=audioDataUri}}
 
