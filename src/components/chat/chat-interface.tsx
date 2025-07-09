@@ -11,7 +11,6 @@ import {
   X,
   LoaderCircle,
   Square,
-  File,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -21,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { ChatMessage } from "./chat-message"
 import type { ChatMessage as ChatMessageType } from "@/lib/types"
-import { getTextResponse, getImageResponse, getVoiceResponse, getDocumentResponse } from "@/lib/actions"
+import { getTextResponse, getImageResponse, getVoiceResponse } from "@/lib/actions"
 import { cn } from "@/lib/utils"
 
 const welcomeMessage: ChatMessageType = {
@@ -34,7 +33,6 @@ export function ChatInterface() {
   const [messages, setMessages] = useState<ChatMessageType[]>([welcomeMessage])
   const [input, setInput] = useState("")
   const [image, setImage] = useState<{ file: File; preview: string } | null>(null)
-  const [documentFile, setDocumentFile] = useState<File | null>(null)
   const [isRecording, setIsRecording] = useState(false)
   const [recordingTime, setRecordingTime] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
@@ -64,13 +62,6 @@ export function ChatInterface() {
       setImage({ file, preview: URL.createObjectURL(file) })
     }
   }
-
-  const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setDocumentFile(file);
-    }
-  };
 
   const fileToDataUri = (file: File) => new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -130,7 +121,7 @@ export function ChatInterface() {
       }
   };
 
-  const handleSubmit = async (e: React.FormEvent, mode: 'text' | 'image' | 'document') => {
+  const handleSubmit = async (e: React.FormEvent, mode: 'text' | 'image') => {
     e.preventDefault();
     if (isLoading) return;
 
@@ -152,21 +143,6 @@ export function ChatInterface() {
           </div>
         )
       };
-    } else if (mode === 'document') {
-      if (!documentFile) return;
-      userMessage = { 
-        id: Date.now().toString(), 
-        role: 'user', 
-        content: (
-          <div className="space-y-2">
-            <p>{queryInput || `Question about ${documentFile.name}`}</p>
-            <div className="p-2 rounded-md border bg-muted text-sm flex items-center gap-2">
-              <FileText className="h-4 w-4 text-muted-foreground" />
-              <span>{documentFile.name}</span>
-            </div>
-          </div>
-        )
-      };
     } else {
       return;
     }
@@ -175,11 +151,9 @@ export function ChatInterface() {
     setIsLoading(true);
     
     const imageFile = image;
-    const docFile = documentFile;
 
     setInput('');
     setImage(null);
-    setDocumentFile(null);
 
     try {
       const chatHistory = messages.map(m => `${m.role}: ${typeof m.content === 'string' ? m.content : '[complex content]'}`).join('\n');
@@ -190,9 +164,6 @@ export function ChatInterface() {
       } else if (mode === 'image' && imageFile) {
         const imageDataUri = await fileToDataUri(imageFile.file);
         res = await getImageResponse({ question: queryInput, imageDataUri, chatHistory });
-      } else if (mode === 'document' && docFile) {
-        const documentDataUri = await fileToDataUri(docFile);
-        res = await getDocumentResponse({ question: queryInput, documentDataUri, chatHistory });
       }
 
       if (res && 'answer' in res) {
@@ -216,11 +187,10 @@ export function ChatInterface() {
         </ScrollArea>
         <div className="border-t p-4 bg-background/80 backdrop-blur-sm">
             <Tabs defaultValue="text" className="w-full">
-                <TabsList className="grid w-full grid-cols-4 mb-2">
+                <TabsList className="grid w-full grid-cols-3 mb-2">
                     <TabsTrigger value="text"><FileText className="h-4 w-4 mr-2"/>Text</TabsTrigger>
                     <TabsTrigger value="voice"><Mic className="h-4 w-4 mr-2"/>Voice</TabsTrigger>
                     <TabsTrigger value="image"><Paperclip className="h-4 w-4 mr-2"/>Image</TabsTrigger>
-                    <TabsTrigger value="document"><File className="h-4 w-4 mr-2"/>Document</TabsTrigger>
                 </TabsList>
                 <TabsContent value="text">
                     <form onSubmit={(e) => handleSubmit(e, 'text')} className="flex items-start gap-2">
@@ -287,38 +257,6 @@ export function ChatInterface() {
                                 rows={1}
                             />
                             <Button type="submit" size="icon" disabled={isLoading || !image}>
-                                {isLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                            </Button>
-                        </div>
-                    </form>
-                </TabsContent>
-                <TabsContent value="document">
-                    <form onSubmit={(e) => handleSubmit(e, 'document')} className="space-y-4">
-                        <div className="space-y-2">
-                            {documentFile && (
-                                <div className="relative w-fit p-2 rounded-lg border bg-muted text-sm flex items-center gap-2">
-                                    <FileText className="h-4 w-4 text-muted-foreground" />
-                                    <span>{documentFile.name}</span>
-                                    <Button onClick={() => setDocumentFile(null)} variant="ghost" size="icon" className="h-6 w-6 rounded-full"><X className="h-4 w-4"/></Button>
-                                </div>
-                            )}
-                            <div className={cn("flex items-center justify-center w-full p-4 rounded-lg border border-dashed", documentFile && "hidden")}>
-                                <label htmlFor="doc-upload" className="flex flex-col items-center gap-2 cursor-pointer">
-                                    <Upload className="h-8 w-8 text-muted-foreground" />
-                                    <span className="text-sm text-muted-foreground">Click to upload a document</span>
-                                </label>
-                                <Input id="doc-upload" type="file" className="hidden" onChange={handleDocumentChange} />
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                            <Textarea
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask a question about the document..."
-                                className="min-h-0 flex-1 resize-none"
-                                rows={1}
-                            />
-                            <Button type="submit" size="icon" disabled={isLoading || !documentFile}>
                                 {isLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                             </Button>
                         </div>
