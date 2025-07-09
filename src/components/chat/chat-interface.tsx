@@ -68,10 +68,6 @@ export function ChatInterface() {
   const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.type !== 'text/plain') {
-          toast({ variant: 'destructive', title: 'Invalid File Type', description: 'Please upload a .txt file.' });
-          return;
-      }
       setDocumentFile(file);
     }
   };
@@ -316,9 +312,9 @@ export function ChatInterface() {
                             <div className={cn("flex items-center justify-center w-full p-4 rounded-lg border border-dashed", documentFile && "hidden")}>
                                 <label htmlFor="doc-upload" className="flex flex-col items-center gap-2 cursor-pointer">
                                     <Upload className="h-8 w-8 text-muted-foreground" />
-                                    <span className="text-sm text-muted-foreground">Click to upload a document (.txt)</span>
+                                    <span className="text-sm text-muted-foreground">Click to upload a document</span>
                                 </label>
-                                <Input id="doc-upload" type="file" className="hidden" accept=".txt" onChange={handleDocumentChange} />
+                                <Input id="doc-upload" type="file" className="hidden" onChange={handleDocumentChange} />
                             </div>
                         </div>
                         <div className="flex items-start gap-2">
