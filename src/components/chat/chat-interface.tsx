@@ -78,13 +78,6 @@ export function ChatInterface() {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-  
-  const fileToText = (file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsText(file);
-  });
 
   const startRecording = async () => {
     try {
@@ -198,8 +191,8 @@ export function ChatInterface() {
         const imageDataUri = await fileToDataUri(imageFile.file);
         res = await getImageResponse({ question: queryInput, imageDataUri, chatHistory });
       } else if (mode === 'document' && docFile) {
-        const documentContent = await fileToText(docFile);
-        res = await getDocumentResponse({ question: queryInput, documentContent, chatHistory });
+        const documentDataUri = await fileToDataUri(docFile);
+        res = await getDocumentResponse({ question: queryInput, documentDataUri, chatHistory });
       }
 
       if (res && 'answer' in res) {

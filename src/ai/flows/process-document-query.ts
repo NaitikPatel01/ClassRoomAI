@@ -12,9 +12,11 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const ProcessDocumentQueryInputSchema = z.object({
-  documentContent: z
+  documentDataUri: z
     .string()
-    .describe('The full content of the user-uploaded document.'),
+    .describe(
+      "A document to be analyzed, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
   question: z.string().describe('The question related to the document.'),
   chatHistory: z.string().describe('The history of the conversation.'),
 });
@@ -45,10 +47,8 @@ const prompt = ai.definePrompt({
   output: {schema: ProcessDocumentQueryOutputSchema},
   prompt: `You are an AI assistant that answers questions based *exclusively* on the provided document content. Do not use any external knowledge. If the answer cannot be found in the document, state that clearly.
 
-Here is the document content:
----
-{{{documentContent}}}
----
+Here is the document for analysis:
+{{media url=documentDataUri}}
 
 Here is the chat history for context, but prioritize the document content for your answer:
 ---
