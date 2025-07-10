@@ -16,8 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { GoogleIcon } from "@/components/icons"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -88,14 +86,6 @@ export function SignupForm() {
           <Button type="submit" className="w-full">Create Account</Button>
         </form>
       </Form>
-      <div className="relative">
-        <Separator className="absolute inset-y-1/2" />
-        <p className="relative bg-background px-2 text-center text-sm text-muted-foreground w-fit mx-auto">OR</p>
-      </div>
-      <Button variant="outline" className="w-full">
-        <GoogleIcon className="mr-2 h-4 w-4" />
-        Sign up with Google
-      </Button>
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link

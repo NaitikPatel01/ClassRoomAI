@@ -16,8 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { GoogleIcon } from "@/components/icons"
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -81,14 +79,6 @@ export function LoginForm() {
           <Button type="submit" className="w-full">Sign In</Button>
         </form>
       </Form>
-      <div className="relative">
-        <Separator className="absolute inset-y-1/2" />
-        <p className="relative bg-background px-2 text-center text-sm text-muted-foreground w-fit mx-auto">OR</p>
-      </div>
-      <Button variant="outline" className="w-full">
-        <GoogleIcon className="mr-2 h-4 w-4" />
-        Sign in with Google
-      </Button>
       <p className="text-center text-sm text-muted-foreground">
         Don't have an account?{" "}
         <Link
