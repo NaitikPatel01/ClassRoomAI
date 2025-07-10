@@ -1,8 +1,7 @@
 import Link from "next/link"
-import Image from "next/image"
 import { Logo } from "@/components/icons"
 import { Button } from "@/components/ui/button"
-import { BookOpen, BrainCircuit, MessageSquare, GraduationCap } from "lucide-react"
+import { BookOpen, BrainCircuit, MessageSquare } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -29,30 +28,20 @@ export default function LandingPage() {
       <main className="flex-1">
         <section className="py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Interactive AI Learning for the Modern Classroom
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    ClassroomAI provides students with instant, personalized help across any subject, making learning more accessible and engaging.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button asChild size="lg">
-                    <Link href="/signup">Get Started for Free</Link>
-                  </Button>
-                </div>
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  Interactive AI Learning for the Modern Classroom
+                </h1>
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                  ClassroomAI provides students with instant, personalized help across any subject, making learning more accessible and engaging.
+                </p>
               </div>
-              <Image
-                src="https://placehold.co/600x400.png"
-                width="600"
-                height="400"
-                alt="Hero"
-                data-ai-hint="classroom technology"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
-              />
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <Button asChild size="lg">
+                  <Link href="/signup">Get Started for Free</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -68,7 +57,7 @@ export default function LandingPage() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 sm:grid-cols-2 md:grid-cols-3 lg:gap-12">
+            <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 sm:grid-cols-2 md:grid-cols-3 lg:gap-12">
               <div className="flex flex-col items-center text-center gap-2 p-4 rounded-lg">
                 <BrainCircuit className="h-12 w-12 text-primary" />
                 <h3 className="text-xl font-bold">Multi-Modal Learning</h3>
